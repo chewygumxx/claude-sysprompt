@@ -1,0 +1,15 @@
+# vim:set expandtab shiftwidth=4 filetype=toml:
+# SPDX-License-Identifier: GPL-3.0-only
+
+#
+#
+# ~chewygumxx/claude-sysprompt.git
+# ::: :/mise.toml
+#
+#
+
+# Order matters: mise puts earlier tools first on PATH, so "npm:npm" must
+# precede node, or node's bundled npm shadows it.
+[tools]
+"npm:npm" = "12"
+node = "24"
