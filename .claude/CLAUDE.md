@@ -67,8 +67,9 @@ output.
 - `npm start`: run the compiled `dist/index.js` with Node directly.
 - `npm run typecheck`: runs `tsc --noEmit`.
 - `npm test`: runs `vitest run` (single pass, not watch mode).
-- `npm run format` / `npm run format:check`: write or verify Prettier
-  formatting across the repo (see `.prettierignore` for exclusions).
+- `npm run format` / `npm run format:check`: write or verify Biome
+  formatting for JS/TS/JSON(C) (see `biome.json`).
+- `npm run lint`: runs `biome lint .` against JS/TS/JSON(C).
 - `npm run lint:md`: runs `remark . --frail` (fails on warnings) against
   every Markdown file.
 - `npm run commit`: runs `cz` (Commitizen) using the `@commitlint/cz-commitlint`
@@ -79,7 +80,7 @@ output.
   (`.husky/commit-msg`), which runs `commitlint --edit`; non-conforming
   commit messages are rejected locally, not just in CI.
 - `.github/workflows/ci.yaml` runs install, typecheck, build,
-  `format:check`, `lint:md`, and the test suite on every push/PR.
+  `format:check`, `lint`, `lint:md`, and the test suite on every push/PR.
   `.github/workflows/commitlint.yaml` separately lints commit messages.
   `.github/dependabot.yml` opens weekly update PRs for both npm
   dependencies and GitHub Actions versions.
@@ -131,8 +132,17 @@ to `main` are applied live by
 - `.editorconfig`: 4-space indentation, LF line endings, trimmed trailing
   whitespace, final newline on all files; Markdown files use 2-space
   indentation.
-- Prettier is configured inline in `package.json` (`*.jsonc` files are
-  formatted without trailing commas).
+- `biome.json` formats and lints JS/TS/JSON(C) (`*.jsonc` files are
+  formatted without trailing commas via an override); it defers to
+  `.editorconfig` for indentation (`useEditorconfig: true`) rather than
+  duplicating it, and respects `.gitignore` so `dist/` is skipped
+  automatically. `typescript-eslint` was considered instead but is
+  incompatible with this repo's `typescript@^7.0.2` (its peer range caps
+  at `<6.1.0`); Biome has no dependency on the `typescript` package, so it
+  sidesteps that entirely. It does **not** cover YAML (the GitHub Actions
+  workflow files, `dependabot.yml`) or Markdown; those are hand-formatted
+  and reviewed rather than auto-checked. `package-lock.json` is
+  auto-protected by Biome and never reformatted.
 - Markdown is linted via `remarkConfig` in `package.json`
   (`remark-preset-lint-recommended` + `remark-preset-lint-consistent`,
   `remark-frontmatter` for the YAML header blocks used throughout this
@@ -143,3 +153,6 @@ to `main` are applied live by
   convention: its content becomes the live, editable PR description body,
   so a persistent header would show up as text every contributor has to
   delete.
+- `biome.json` also omits the file header convention: unlike
+  `tsconfig.json`, Biome's own config parser does not treat `.json` as
+  JSONC and errors on a leading comment block.
