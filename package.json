@@ -1,57 +1,68 @@
 {
-  "name": "claude-sysprompt",
-  "version": "1.0.0",
-  "description": "Experimentation with configuring a custom system prompt via Claude Code Agent SDK",
-  "private": true,
-  "homepage": "https://github.com/chewygumxx/claude-sysprompt#readme",
-  "bugs": {
-    "url": "https://github.com/chewygumxx/claude-sysprompt/issues"
-  },
-  "repository": "github:chewygumxx/nvim-config",
-  "license": "GPL-3.0-only",
-  "devDependencies": {
-    "@commitlint/cli": "^21.2.2",
-    "@commitlint/config-conventional": "^21.2.2",
-    "@commitlint/cz-commitlint": "^21.2.2",
-    "commitizen": "^4.3.2",
-    "husky": "^9.1.7",
-    "prettier": "^3.9.7",
-    "remark-frontmatter": "^5.0.0",
-    "remark-preset-lint-consistent": "^6.0.1",
-    "remark-preset-lint-recommended": "^7.0.1",
-    "typescript": "^7.0.2"
-  },
-  "scripts": {
-    "commit": "cz",
-    "prepare": "test -d node_modules/husky && husky || true",
-    "typecheck": "tsc"
-  },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/cz-commitlint"
-    }
-  },
-  "patchedDependencies": {
-    "@commitlint/cz-commitlint@21.2.2": "patches/@commitlint/cz-commitlint@21.2.2.patch"
-  },
-  "remarkConfig": {
-    "settings": {
-      "bullet": "-"
+    "name": "claude-sysprompt",
+    "version": "1.0.0",
+    "description": "Experimentation with configuring a custom system prompt via Claude Code Agent SDK",
+    "private": true,
+    "type": "module",
+    "homepage": "https://github.com/chewygumxx/claude-sysprompt#readme",
+    "bugs": {
+        "url": "https://github.com/chewygumxx/claude-sysprompt/issues"
     },
-    "plugins": [
-      "remark-frontmatter",
-      "remark-preset-lint-recommended",
-      "remark-preset-lint-consistent"
-    ]
-  },
-  "prettier": {
-    "overrides": [
-      {
-        "files": "*.jsonc",
-        "options": {
-          "trailingComma": "none"
+    "repository": "github:chewygumxx/nvim-config",
+    "license": "GPL-3.0-only",
+    "engines": {
+        "node": ">=22.12.0"
+    },
+    "dependencies": {
+        "@anthropic-ai/claude-agent-sdk": "^0.3.283"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.14",
+        "@commitlint/cli": "^21.2.2",
+        "@commitlint/config-conventional": "^21.2.2",
+        "@commitlint/cz-commitlint": "^21.2.2",
+        "@types/node": "^26.6.3",
+        "commitizen": "^4.3.2",
+        "husky": "^9.1.7",
+        "remark-cli": "^12.0.1",
+        "remark-frontmatter": "^5.0.0",
+        "remark-gfm": "^4.0.1",
+        "remark-preset-lint-consistent": "^6.0.1",
+        "remark-preset-lint-recommended": "^7.0.1",
+        "tsx": "^4.23.15",
+        "typescript": "^7.0.2",
+        "vitest": "^5.0.2"
+    },
+    "scripts": {
+        "build": "tsc",
+        "commit": "cz",
+        "dev": "tsx --env-file-if-exists=.env src/index.ts",
+        "format": "biome format --write .",
+        "format:check": "biome format .",
+        "lint": "biome lint .",
+        "lint:md": "remark . --frail",
+        "prepare": "test -d node_modules/husky && husky || true",
+        "start": "node --env-file-if-exists=.env dist/index.js",
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit"
+    },
+    "config": {
+        "commitizen": {
+            "path": "@commitlint/cz-commitlint"
         }
-      }
-    ]
-  }
+    },
+    "patchedDependencies": {
+        "@commitlint/cz-commitlint@21.2.2": "patches/@commitlint/cz-commitlint@21.2.2.patch"
+    },
+    "remarkConfig": {
+        "settings": {
+            "bullet": "-"
+        },
+        "plugins": [
+            "remark-frontmatter",
+            "remark-gfm",
+            "remark-preset-lint-recommended",
+            "remark-preset-lint-consistent"
+        ]
+    }
 }

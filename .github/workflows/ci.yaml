@@ -4,11 +4,11 @@
 #
 #
 # ~chewygumxx/claude-sysprompt.git
-# ::: :/.github/workflows/commitlint.yaml
+# ::: :/.github/workflows/ci.yaml
 #
 #
 
-name: Lint Commit Messages
+name: CI
 
 on:
     push:
@@ -19,21 +19,18 @@ on:
 
 permissions:
     contents: read
-    pull-requests: read
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
 jobs:
-    commitlint:
+    build:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout
               uses: actions/checkout@v7
-              with:
-                  fetch-depth: 0
 
             - name: Setup Node
               uses: actions/setup-node@v7
@@ -44,10 +41,20 @@ jobs:
             - name: NPM Clean Install
               run: npm ci
 
-            - name: Lint Pull Request Commits
-              if: github.event_name == 'pull_request'
-              run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+            - name: Typecheck
+              run: npm run typecheck
 
-            - name: Lint Pushed Commit
-              if: github.event_name != 'pull_request'
-              run: npx commitlint --last --verbose
+            - name: Build
+              run: npm run build
+
+            - name: Check Formatting
+              run: npm run format:check
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Lint Markdown
+              run: npm run lint:md
+
+            - name: Test
+              run: npm test

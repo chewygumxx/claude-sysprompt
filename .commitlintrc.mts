@@ -93,6 +93,17 @@ const scopes: { delimiters: string[]; enum: Enumerable[] } = {
             fullName: "Claude",
             description: "Claude Code assets ie. hooks, skills, agents, etc.",
         },
+        {
+            name: "sdk",
+            fullName: "SDK",
+            description: "Agent SDK experimentation source, ie. src/",
+        },
+        {
+            name: "config",
+            fullName: "Config",
+            description:
+                "Repository tooling configuration, ie. tsconfig, editorconfig, etc.",
+        },
     ],
 };
 
