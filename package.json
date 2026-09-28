@@ -63,5 +63,8 @@
             "remark-preset-lint-recommended",
             "remark-preset-lint-consistent"
         ]
+    },
+    "allowScripts": {
+        "esbuild": true
     }
 }
