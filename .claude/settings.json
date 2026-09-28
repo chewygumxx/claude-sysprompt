@@ -23,7 +23,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "sh -c 'sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/prohibit-em-dash.sh\"'",
+                        "command": "sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/prohibit-em-dash.sh\"",
                         "statusMessage": "Checking for em dashes",
                         "timeout": 10
                     }
@@ -35,7 +35,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "sh -c 'sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/install-deps.sh\"'",
+                        "command": "sh \"${CLAUDE_PROJECT_DIR}/.claude/hooks/install-deps.sh\"",
                         "statusMessage": "Installing dependencies",
                         "timeout": 120
                     }
