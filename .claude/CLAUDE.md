@@ -43,9 +43,23 @@ further.
 `@anthropic-ai/claude-agent-sdk` with a custom `options.systemPrompt`
 string (overriding Claude Code's default preset entirely, rather than
 `{ type: 'preset', preset: 'claude_code', append: ... }`) and streams the
-`assistant` messages' text blocks to stdout. The package is ESM-only
+`text_delta` events of `stream_event` messages to stdout
+(`includePartialMessages: true`). The package is ESM-only
 (`"type": "module"` in `package.json`, ships no CJS build), so `tsconfig.json`
 targets `module`/`moduleResolution: NodeNext`.
+
+`query()` spawns the SDK's bundled native `claude` binary for every call,
+so the exported `options` keep that subprocess lean: `tools: []` drops
+roughly 32k input tokens of tool definitions, and `settingSources: []`
+stops it from loading `~/.claude` and `.claude/` settings, which would
+otherwise run this repo's `SessionStart` hook (a full `npm install`) and
+every enabled plugin before the first token (measured at about 12s).
+The CLI still prepends a fixed identity line ("You are a Claude agent,
+built on Anthropic's Claude Agent SDK.") and injects environment context
+(working directory, model name, date) regardless of `systemPrompt`; the
+persona prompt handles that by telling the model to treat them as
+incidental and not to volunteer its provenance. Only calling the Messages
+API directly gives full control of the system prompt.
 
 Build output goes to `dist/` (gitignored, rebuilt via `npm run build`);
 never edit files there directly.
