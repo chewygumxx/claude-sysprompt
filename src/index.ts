@@ -24,16 +24,27 @@ export function resolvePrompt(args: string[]): string {
 async function main(): Promise<void> {
     const prompt = resolvePrompt(process.argv.slice(2));
 
-    for await (const message of query({ prompt, options: { systemPrompt } })) {
-        if (message.type !== "assistant") {
-            continue;
-        }
+    try {
+        for await (const message of query({
+            prompt,
+            options: { systemPrompt },
+        })) {
+            if (message.type !== "assistant") {
+                continue;
+            }
 
-        for (const block of message.message.content) {
-            if (block.type === "text") {
-                process.stdout.write(block.text);
+            for (const block of message.message.content) {
+                if (block.type === "text") {
+                    process.stdout.write(block.text);
+                }
             }
         }
+    } catch (error) {
+        process.stderr.write(
+            `${error instanceof Error ? error.message : String(error)}\n`,
+        );
+        process.exitCode = 1;
+        return;
     }
 
     process.stdout.write("\n");
