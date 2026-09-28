@@ -33,19 +33,29 @@ While the initial purpose of this repository is for experimentation with
 custom system prompt via the TypeScript SDK, it is expected to grow
 further.
 
-## Repository state
+## Architecture
 
-This repository is currently a tooling scaffold, not yet an application.
-There is no `src/`, no entry point, and no `tsconfig.json` despite
-`typecheck` being wired up in `package.json`. Expect real Agent SDK code
-to land under a new `src/`-style directory as the project grows.
+`src/index.ts` is the experimentation entry point. It calls `query()` from
+`@anthropic-ai/claude-agent-sdk` with a custom `options.systemPrompt`
+string (overriding Claude Code's default preset entirely, rather than
+`{ type: 'preset', preset: 'claude_code', append: ... }`) and streams the
+`assistant` messages' text blocks to stdout. The package is ESM-only
+(`"type": "module"` in `package.json`, ships no CJS build), so `tsconfig.json`
+targets `module`/`moduleResolution: NodeNext`.
+
+Build output goes to `dist/` (gitignored, rebuilt via `npm run build`);
+never edit files there directly.
 
 ## Commands
 
 - `npm ci` (or `npm install`): install dependencies. `node_modules/` is
   gitignored and not present by default.
-- `npm run typecheck`: runs `tsc`. Requires a `tsconfig.json` to be added
-  once real source exists.
+- `npm run dev`: run `src/index.ts` directly via `tsx`, no build step.
+  Extra argv after the script becomes the prompt, e.g.
+  `npm run dev -- "What is your name?"`.
+- `npm run build`: compile `src/` to `dist/` via `tsc`.
+- `npm start`: run the compiled `dist/index.js` with Node directly.
+- `npm run typecheck`: runs `tsc --noEmit`.
 - `npm run commit`: runs `cz` (Commitizen) using the `@commitlint/cz-commitlint`
   adapter (patched via `patches/@commitlint/cz-commitlint@21.2.2.patch` to
   show enum titles instead of raw names in prompts) to interactively build a
@@ -61,10 +71,13 @@ Enforced by `.commitlintrc.mts` (extends `@commitlint/config-conventional`):
 - Header max length: 50 characters.
 - `type` must be one of: `feat`, `fix`, `tweak`, `chore`, `style`, `docs`,
   `ci`, `refactor`, `perf`, `build`, `test`, `revert`.
-- `scope` is optional but, if present, must use `/` as a delimiter and the
-  only currently allowed scope is `claude` (Claude Code assets: hooks,
-  skills, agents, etc.). Add new scopes to the `scopes.enum` array in
-  `.commitlintrc.mts` before using them.
+- `scope` is optional but, if present, must use `/` as a delimiter (multiple
+  scopes may be combined, e.g. `feat(sdk/config): ...`) and each part must
+  be one of the entries in the `scopes.enum` array in `.commitlintrc.mts`:
+  `claude` (Claude Code assets: hooks, skills, agents, etc.), `sdk` (Agent
+  SDK experimentation source under `src/`), or `config` (repository tooling
+  configuration, e.g. `tsconfig.json`, `.editorconfig`). Add further scopes
+  to that array before using them.
 - `subject` must be non-empty, in start-case or sentence-case.
 - Body lines max 72 characters.
 
