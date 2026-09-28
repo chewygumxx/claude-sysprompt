@@ -16,12 +16,20 @@ root=${CLAUDE_PROJECT_DIR:-}
 [ -n "$root" ] || exit 0
 
 [ -f "$root/package.json" ] || exit 0
-command -v npm >/dev/null 2>&1 || exit 0
 
 cd "$root" || exit 0
 
 if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
-    npm ci --no-audit --no-fund
+    # The remote container's system npm is older than devEngines allows,
+    # so install mise and run npm through the versions in mise.toml.
+    PATH="$HOME/.local/bin:$PATH"
+    if ! command -v mise >/dev/null 2>&1; then
+        curl -fsSL https://mise.run | MISE_QUIET=1 sh >/dev/null || exit 1
+    fi
+    mise trust --quiet "$root/mise.toml" || exit 1
+    mise install --quiet || exit 1
+    mise exec -- npm ci --no-audit --no-fund
 else
+    command -v npm >/dev/null 2>&1 || exit 0
     npm install --no-audit --no-fund
 fi
