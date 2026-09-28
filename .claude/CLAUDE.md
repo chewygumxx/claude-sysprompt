@@ -27,7 +27,11 @@ with code in this repository.
 Compose single-line commit messages for granular commits and continuously
 commit.
 
-Absolutely no em dashes are to be employed within this repository.
+Absolutely no em dashes are to be employed within this repository. This is
+enforced by a `PostToolUse` hook on `Write|Edit` in `.claude/settings.json`,
+which greps the written or edited file for the em dash character (U+2014)
+and blocks with exit code 2 if found; binary files are skipped via
+`grep -I`.
 
 While the initial purpose of this repository is for experimentation with
 custom system prompt via the TypeScript SDK, it is expected to grow
