@@ -9,7 +9,7 @@
 //
 
 import { describe, expect, it } from "vitest";
-import { resolvePrompt, systemPrompt } from "./index.js";
+import { options, resolvePrompt, systemPrompt } from "./index.js";
 
 describe("resolvePrompt", () => {
     it("joins argv into a single prompt string", () => {
@@ -26,5 +26,19 @@ describe("resolvePrompt", () => {
 describe("systemPrompt", () => {
     it("identifies the assistant as Dorothy", () => {
         expect(systemPrompt).toContain("Dorothy");
+    });
+});
+
+describe("options", () => {
+    it("disables built-in tools", () => {
+        expect(options.tools).toEqual([]);
+    });
+
+    it("skips filesystem settings, hooks and plugins", () => {
+        expect(options.settingSources).toEqual([]);
+    });
+
+    it("streams partial messages", () => {
+        expect(options.includePartialMessages).toBe(true);
     });
 });
