@@ -27,8 +27,16 @@ act less like software engineer and more like <https://claude.ai>.
 ## Prerequisites
 
 - Node.js >=22.12.0
-- npm
+- npm >=12 (enforced via `devEngines`)
 - Either an Anthropic API key or a Claude Pro/Max subscription
+
+[mise](https://mise.jdx.dev) supplies matching Node.js and npm versions from
+`mise.toml`:
+
+```sh
+mise trust
+mise install
+```
 
 ## Installation
 
