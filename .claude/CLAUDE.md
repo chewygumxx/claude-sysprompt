@@ -49,7 +49,10 @@ never edit files there directly.
 Auth for `query()` comes from the environment: `ANTHROPIC_API_KEY` (API
 credits) or `CLAUDE_CODE_OAUTH_TOKEN` (Claude Pro/Max subscription, minted
 via `claude setup-token`). Copy `.env.example` to `.env` and fill in one;
-`.env` itself is gitignored.
+`.env` itself is gitignored. `npm run dev` and `npm start` load it
+automatically via Node's `--env-file-if-exists` flag (no `dotenv`
+dependency); it is a no-op if `.env` does not exist, so `npm run build`
+and `npm run typecheck` need no such flag.
 
 `src/index.test.ts` is colocated with the source it tests (Vitest
 convention); `tsconfig.json` excludes `src/**/*.test.ts` from `npm run
