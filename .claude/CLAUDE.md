@@ -66,7 +66,10 @@ output.
 ## Commands
 
 - `npm ci` (or `npm install`): install dependencies. `node_modules/` is
-  gitignored and not present by default.
+  gitignored and not present by default. npm 12+ blocks dependency install
+  scripts not listed in `allowScripts` in `package.json`; entries use bare
+  package names (not `name@version`, which `npm install-scripts approve`
+  writes) so version bumps do not reintroduce the warning.
 - `npm run dev`: run `src/index.ts` directly via `tsx`, no build step.
   Extra argv after the script becomes the prompt, e.g.
   `npm run dev -- "What is your name?"`.
