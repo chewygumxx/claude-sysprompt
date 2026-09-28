@@ -1,0 +1,21 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+    "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "lineEnding": "lf",
+        "useEditorconfig": true
+    },
+    "linter": { "enabled": true, "rules": { "preset": "recommended" } },
+    "assist": {
+        "enabled": true,
+        "actions": { "source": { "organizeImports": "on" } }
+    },
+    "overrides": [
+        {
+            "includes": ["*.jsonc"],
+            "json": { "formatter": { "trailingCommas": "none" } }
+        }
+    ]
+}
