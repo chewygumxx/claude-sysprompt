@@ -80,9 +80,12 @@ output.
 - `npm run lint:md`: runs `remark . --frail` (fails on warnings) against
   every Markdown file.
 - `npm run commit`: runs `cz` (Commitizen) using the `@commitlint/cz-commitlint`
-  adapter (patched via `patches/@commitlint/cz-commitlint@21.2.2.patch` to
-  show enum titles instead of raw names in prompts) to interactively build a
-  conventional commit that satisfies `.commitlintrc.mts`.
+  adapter (patched via `patch-package` in `postinstall`, from
+  `patches/@commitlint+cz-commitlint+21.2.3.patch`, to show enum titles
+  instead of raw names in prompts) to interactively build a conventional
+  commit that satisfies `.commitlintrc.mts`. Do not also declare npm's
+  native `patchedDependencies` field: npm versions that support it fail
+  with `EPATCHUNUSED` when its entry matches no installed version.
 - Every commit is checked by a Husky `commit-msg` hook
   (`.husky/commit-msg`), which runs `commitlint --edit`; non-conforming
   commit messages are rejected locally, not just in CI.
