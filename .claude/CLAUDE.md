@@ -46,6 +46,16 @@ targets `module`/`moduleResolution: NodeNext`.
 Build output goes to `dist/` (gitignored, rebuilt via `npm run build`);
 never edit files there directly.
 
+Auth for `query()` comes from the environment: `ANTHROPIC_API_KEY` (API
+credits) or `CLAUDE_CODE_OAUTH_TOKEN` (Claude Pro/Max subscription, minted
+via `claude setup-token`). Copy `.env.example` to `.env` and fill in one;
+`.env` itself is gitignored.
+
+`src/index.test.ts` is colocated with the source it tests (Vitest
+convention); `tsconfig.json` excludes `src/**/*.test.ts` from `npm run
+build` since Vitest transpiles tests itself and does not need the `dist/`
+output.
+
 ## Commands
 
 - `npm ci` (or `npm install`): install dependencies. `node_modules/` is
@@ -56,6 +66,11 @@ never edit files there directly.
 - `npm run build`: compile `src/` to `dist/` via `tsc`.
 - `npm start`: run the compiled `dist/index.js` with Node directly.
 - `npm run typecheck`: runs `tsc --noEmit`.
+- `npm test`: runs `vitest run` (single pass, not watch mode).
+- `npm run format` / `npm run format:check`: write or verify Prettier
+  formatting across the repo (see `.prettierignore` for exclusions).
+- `npm run lint:md`: runs `remark . --frail` (fails on warnings) against
+  every Markdown file.
 - `npm run commit`: runs `cz` (Commitizen) using the `@commitlint/cz-commitlint`
   adapter (patched via `patches/@commitlint/cz-commitlint@21.2.2.patch` to
   show enum titles instead of raw names in prompts) to interactively build a
@@ -63,6 +78,11 @@ never edit files there directly.
 - Every commit is checked by a Husky `commit-msg` hook
   (`.husky/commit-msg`), which runs `commitlint --edit`; non-conforming
   commit messages are rejected locally, not just in CI.
+- `.github/workflows/ci.yaml` runs install, typecheck, build,
+  `format:check`, `lint:md`, and the test suite on every push/PR.
+  `.github/workflows/commitlint.yaml` separately lints commit messages.
+  `.github/dependabot.yml` opens weekly update PRs for both npm
+  dependencies and GitHub Actions versions.
 
 ## Commit message rules
 
@@ -115,5 +135,11 @@ to `main` are applied live by
   formatted without trailing commas).
 - Markdown is linted via `remarkConfig` in `package.json`
   (`remark-preset-lint-recommended` + `remark-preset-lint-consistent`,
-  plus `remark-frontmatter` for the YAML header blocks used throughout
-  this repo).
+  `remark-frontmatter` for the YAML header blocks used throughout this
+  repo, and `remark-gfm` so GitHub-flavored syntax, e.g. the `- [ ]` task
+  lists in `.github/pull_request_template.md`, parses correctly instead of
+  being mistaken for broken link references).
+- `.github/pull_request_template.md` intentionally omits the file header
+  convention: its content becomes the live, editable PR description body,
+  so a persistent header would show up as text every contributor has to
+  delete.
