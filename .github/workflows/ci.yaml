@@ -42,3 +42,12 @@ jobs:
 
             - name: Build
               run: npm run build
+
+            - name: Check Formatting
+              run: npm run format:check
+
+            - name: Lint Markdown
+              run: npm run lint:md
+
+            - name: Test
+              run: npm test
