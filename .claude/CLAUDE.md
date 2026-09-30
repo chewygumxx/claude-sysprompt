@@ -79,14 +79,9 @@ output.
 
 ## Commands
 
-- `mise.toml` pins Node.js and npm for local shells, CI (via
+- `mise.toml` pins Node.js (and so its bundled npm) for local shells, CI (via
   `jdx/mise-action`) and the remote `SessionStart` hook
-  (`.claude/hooks/install-deps.sh`, which installs mise if missing). Keep
-  `"npm:npm"` listed before `node`: mise puts earlier tools first on
-  `PATH`, otherwise node's bundled npm shadows it. `devEngines` in
-  `package.json` makes every npm command (including `npm run` and `npx`)
-  fail with `EBADDEVENGINES` on npm older than 12, so run npm through mise
-  (`mise exec -- npm ...`) wherever mise is not activated.
+  (`.claude/hooks/install-deps.sh`, which installs mise if missing).
 - `npm ci` (or `npm install`): install dependencies. `node_modules/` is
   gitignored and not present by default. npm 12+ blocks dependency install
   scripts not listed in `allowScripts` in `package.json`; entries use bare
@@ -113,7 +108,7 @@ output.
   (`.husky/commit-msg`), which runs `commitlint --edit`; non-conforming
   commit messages are rejected locally, not just in CI. It calls
   `commitlint` directly (Husky puts `node_modules/.bin` on `PATH`) rather
-  than via `npx`, so `devEngines` cannot block commits.
+  than via `npx`.
 - `.github/workflows/ci.yaml` runs install, typecheck, build,
   `format:check`, `lint`, `lint:md`, and the test suite on every push/PR.
   `.github/workflows/commitlint.yaml` separately lints commit messages.
