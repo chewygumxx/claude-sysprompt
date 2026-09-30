@@ -20,8 +20,8 @@ root=${CLAUDE_PROJECT_DIR:-}
 cd "$root" || exit 0
 
 if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
-    # The remote container's system npm is older than devEngines allows,
-    # so install mise and run npm through the versions in mise.toml.
+    # The remote container's system Node may not be the one mise.toml pins,
+    # so install mise and run npm through the Node it provides.
     PATH="$HOME/.local/bin:$PATH"
     if ! command -v mise >/dev/null 2>&1; then
         curl -fsSL https://mise.run | MISE_QUIET=1 sh >/dev/null || exit 1

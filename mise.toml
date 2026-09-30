@@ -8,8 +8,5 @@
 #
 #
 
-# Order matters: mise puts earlier tools first on PATH, so "npm:npm" must
-# precede node, or node's bundled npm shadows it.
 [tools]
-"npm:npm" = "12"
 node = "24"
