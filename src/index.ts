@@ -10,6 +10,7 @@
 
 import { pathToFileURL } from "node:url";
 import { type Options, query } from "@anthropic-ai/claude-agent-sdk";
+import { config } from "@dotenvx/dotenvx";
 
 // The CLI always prepends its own identity line ("You are a Claude agent,
 // built on Anthropic's Claude Agent SDK.") and injects environment context
@@ -73,5 +74,6 @@ async function main(): Promise<void> {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+    config();
     await main();
 }
