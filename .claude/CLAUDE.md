@@ -62,9 +62,15 @@ never edit files there directly.
 
 Auth for `query()` comes from the environment: `ANTHROPIC_API_KEY` (API
 credits) or `CLAUDE_CODE_OAUTH_TOKEN` (Claude Pro/Max subscription, minted
-via `claude setup-token`). Copy `.env.example` to `.env` and fill in one;
-`.env` itself is gitignored. Bun loads it automatically for every command
-(no `dotenv` dependency), and does nothing if `.env` does not exist.
+via `claude setup-token`). Copy `.env.example` to `.env` and fill in one,
+encrypted with `dotenvx set`; `.env` itself is gitignored. `main()`'s
+entry guard in `src/index.ts` calls `@dotenvx/dotenvx`'s `config()`,
+which decrypts `.env` using the private key from Dotenvx Armor (or a
+gitignored `.env.keys`). Bun's own `.env` autoload is disabled via
+`[env] file = false` in `bunfig.toml`: otherwise Bun preloads the raw
+`encrypted:...` ciphertext, `config()` declines to overwrite an existing
+variable, and the API rejects the ciphertext as a bearer token (401). A
+top-level `env = false` there is silently ignored.
 
 `src/index.test.ts` is colocated with the source it tests (`bun test`
 convention); `tsconfig.json` excludes `src/**/*.test.ts` from `bun run
