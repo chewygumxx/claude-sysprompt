@@ -63,9 +63,12 @@ never edit files there directly.
 Auth for `query()` comes from the environment: `ANTHROPIC_API_KEY` (API
 credits) or `CLAUDE_CODE_OAUTH_TOKEN` (Claude Pro/Max subscription, minted
 via `claude setup-token`). Copy `.env.example` to `.env` and fill in one,
-encrypted with `dotenvx set`; `.env` itself is gitignored. `main()`'s
-entry guard in `src/index.ts` calls `@dotenvx/dotenvx`'s `config()`,
-which decrypts `.env` using the private key from Dotenvx Armor (or a
+encrypted with `dotenvx set`. The encrypted `.env` is committed (the repo
+is public, so it is only as safe as the Armor-held private key); the
+`.husky/pre-commit` hook runs dotenvx's `protect --git-file` check on
+every staged env file and rejects plaintext values and `.env.keys`.
+`main()`'s entry guard in `src/index.ts` calls `@dotenvx/dotenvx`'s
+`config()`, which decrypts `.env` using the private key from Dotenvx Armor (or a
 gitignored `.env.keys`). Bun's own `.env` autoload is disabled via
 `[env] file = false` in `bunfig.toml`: otherwise Bun preloads the raw
 `encrypted:...` ciphertext, `config()` declines to overwrite an existing
