@@ -8,7 +8,7 @@
 //
 //
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { options, resolvePrompt, systemPrompt } from "./index.js";
 
 describe("resolvePrompt", () => {
