@@ -21,21 +21,17 @@ tags:
 
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working
-with code in this repository.
+Continuously granularly commit as you work. Compose single-line commit messages
+whenever appropriate. If the granular commit does indeed warrant further
+context, include such within the commit message body.
 
-Compose single-line commit messages for granular commits and continuously
-commit.
+When appropriate and worthwhile to compact, append the following
+newline-delimited items to your response:
 
-Absolutely no em dashes are to be employed within this repository. This is
-enforced by a `PostToolUse` hook on `Write|Edit` in `.claude/settings.json`,
-which greps the written or edited file for the em dash character (U+2014)
-and blocks with exit code 2 if found; binary files are skipped via
-`grep -I`.
-
-While the initial purpose of this repository is for experimentation with
-custom system prompt via the TypeScript SDK, it is expected to grow
-further.
+- A `/compact <summary>`
+- Appraisal rating scaled 1-100
+- Risk assessment rating scaled 1-100
+- Terse single-sentence justification.
 
 ## Architecture
 
