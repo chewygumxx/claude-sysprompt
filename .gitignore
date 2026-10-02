@@ -12,7 +12,8 @@
 /dist/
 /coverage/
 
-.env
+# .env itself is committed, encrypted by dotenvx (see .husky/pre-commit).
+!.env
 .env.*
 !.env.example
 
