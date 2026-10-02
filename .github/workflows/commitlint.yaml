@@ -35,23 +35,23 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Setup Node and NPM
+            - name: Setup Bun
               uses: jdx/mise-action@v4
 
-            - name: Cache NPM
+            - name: Cache Bun
               uses: actions/cache@v6
               with:
-                  path: ~/.npm
-                  key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-                  restore-keys: npm-${{ runner.os }}-
+                  path: ~/.bun/install/cache
+                  key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+                  restore-keys: bun-${{ runner.os }}-
 
-            - name: NPM Clean Install
-              run: npm ci
+            - name: Bun Install
+              run: bun install --frozen-lockfile
 
             - name: Lint Pull Request Commits
               if: github.event_name == 'pull_request'
-              run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+              run: bunx --bun --no-install commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
             - name: Lint Pushed Commit
               if: github.event_name != 'pull_request'
-              run: npx commitlint --last --verbose
+              run: bunx --bun --no-install commitlint --last --verbose
