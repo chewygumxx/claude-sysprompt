@@ -20,16 +20,16 @@ root=${CLAUDE_PROJECT_DIR:-}
 cd "$root" || exit 0
 
 if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
-    # The remote container's system Node may not be the one mise.toml pins,
-    # so install mise and run npm through the Node it provides.
+    # The remote container may have no Bun, or not the one mise.toml pins,
+    # so install mise and run the Bun it provides.
     PATH="$HOME/.local/bin:$PATH"
     if ! command -v mise >/dev/null 2>&1; then
         curl -fsSL https://mise.run | MISE_QUIET=1 sh >/dev/null || exit 1
     fi
     mise trust --quiet "$root/mise.toml" || exit 1
     mise install --quiet || exit 1
-    mise exec -- npm ci --no-audit --no-fund
+    mise exec -- bun install --frozen-lockfile
 else
-    command -v npm >/dev/null 2>&1 || exit 0
-    npm install --no-audit --no-fund
+    command -v bun >/dev/null 2>&1 || exit 0
+    bun install
 fi
