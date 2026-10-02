@@ -52,7 +52,7 @@ targets `module`/`moduleResolution: NodeNext`.
 so the exported `options` keep that subprocess lean: `tools: []` drops
 roughly 32k input tokens of tool definitions, and `settingSources: []`
 stops it from loading `~/.claude` and `.claude/` settings, which would
-otherwise run this repo's `SessionStart` hook (a full `npm install`) and
+otherwise run this repo's `SessionStart` hook (a full `bun install`) and
 every enabled plugin before the first token (measured at about 12s).
 The CLI still prepends a fixed identity line ("You are a Claude agent,
 built on Anthropic's Claude Agent SDK.") and injects environment context
@@ -61,45 +61,42 @@ persona prompt handles that by telling the model to treat them as
 incidental and not to volunteer its provenance. Only calling the Messages
 API directly gives full control of the system prompt.
 
-Build output goes to `dist/` (gitignored, rebuilt via `npm run build`);
+Build output goes to `dist/` (gitignored, rebuilt via `bun run build`);
 never edit files there directly.
 
 Auth for `query()` comes from the environment: `ANTHROPIC_API_KEY` (API
 credits) or `CLAUDE_CODE_OAUTH_TOKEN` (Claude Pro/Max subscription, minted
 via `claude setup-token`). Copy `.env.example` to `.env` and fill in one;
-`.env` itself is gitignored. `npm run dev` and `npm start` load it
-automatically via Node's `--env-file-if-exists` flag (no `dotenv`
-dependency); it is a no-op if `.env` does not exist, so `npm run build`
-and `npm run typecheck` need no such flag.
+`.env` itself is gitignored. Bun loads it automatically for every command
+(no `dotenv` dependency), and does nothing if `.env` does not exist.
 
-`src/index.test.ts` is colocated with the source it tests (Vitest
-convention); `tsconfig.json` excludes `src/**/*.test.ts` from `npm run
-build` since Vitest transpiles tests itself and does not need the `dist/`
-output.
+`src/index.test.ts` is colocated with the source it tests (`bun test`
+convention); `tsconfig.json` excludes `src/**/*.test.ts` from `bun run
+build` since Bun runs the TypeScript tests itself and does not need the
+`dist/` output.
 
 ## Commands
 
-- `mise.toml` pins Node.js (and so its bundled npm) for local shells, CI (via
-  `jdx/mise-action`) and the remote `SessionStart` hook
-  (`.claude/hooks/install-deps.sh`, which installs mise if missing).
-- `npm ci` (or `npm install`): install dependencies. `node_modules/` is
-  gitignored and not present by default. npm 12+ blocks dependency install
-  scripts not listed in `allowScripts` in `package.json`; entries use bare
-  package names (not `name@version`, which `npm install-scripts approve`
-  writes) so version bumps do not reintroduce the warning.
-- `npm run dev`: run `src/index.ts` directly via `tsx`, no build step.
+- `mise.toml` pins Bun for local shells, CI (via `jdx/mise-action`) and
+  the remote `SessionStart` hook (`.claude/hooks/install-deps.sh`, which
+  installs mise if missing).
+- `bun install` (`--frozen-lockfile` in CI): install dependencies.
+  `node_modules/` is gitignored and not present by default. Bun runs no
+  dependency lifecycle scripts unless the package is listed in
+  `trustedDependencies` in `package.json`; none currently needs one.
+- `bun run dev`: run `src/index.ts` directly with Bun, no build step.
   Extra argv after the script becomes the prompt, e.g.
-  `npm run dev -- "What is your name?"`.
-- `npm run build`: compile `src/` to `dist/` via `tsc`.
-- `npm start`: run the compiled `dist/index.js` with Node directly.
-- `npm run typecheck`: runs `tsc --noEmit`.
-- `npm test`: runs `vitest run` (single pass, not watch mode).
-- `npm run format` / `npm run format:check`: write or verify Biome
+  `bun run dev -- "What is your name?"`.
+- `bun run build`: compile `src/` to `dist/` via `tsc`.
+- `bun start`: run the compiled `dist/index.js` with Bun directly.
+- `bun run typecheck`: runs `tsc --noEmit`.
+- `bun run test`: runs `bun test` (single pass, not watch mode).
+- `bun run format` / `bun run format:check`: write or verify Biome
   formatting for JS/TS/JSON(C) (see `biome.json`).
-- `npm run lint`: runs `biome lint .` against JS/TS/JSON(C).
-- `npm run lint:md`: runs `remark . --frail` (fails on warnings) against
+- `bun run lint`: runs `biome lint .` against JS/TS/JSON(C).
+- `bun run lint:md`: runs `remark . --frail` (fails on warnings) against
   every Markdown file.
-- `npm run commit`: runs `cz` (Commitizen) using the
+- `bun run commit`: runs `cz` (Commitizen) using the
   `@chewygumxx/cz-commitlint` adapter (which wraps `@commitlint/cz-commitlint`
   to show enum titles instead of raw names in prompts, without patching it)
   to interactively build a conventional commit that satisfies
@@ -108,11 +105,11 @@ output.
   (`.husky/commit-msg`), which runs `commitlint --edit`; non-conforming
   commit messages are rejected locally, not just in CI. It calls
   `commitlint` directly (Husky puts `node_modules/.bin` on `PATH`) rather
-  than via `npx`.
+  than via `bunx`.
 - `.github/workflows/ci.yaml` runs install, typecheck, build,
   `format:check`, `lint`, `lint:md`, and the test suite on every push/PR.
   `.github/workflows/commitlint.yaml` separately lints commit messages.
-  `.github/dependabot.yml` opens weekly update PRs for both npm
+  `.github/dependabot.yml` opens weekly update PRs for both Bun
   dependencies and GitHub Actions versions.
 
 ## Commit message rules
@@ -171,8 +168,8 @@ to `main` are applied live by
   at `<6.1.0`); Biome has no dependency on the `typescript` package, so it
   sidesteps that entirely. It does **not** cover YAML (the GitHub Actions
   workflow files, `dependabot.yml`) or Markdown; those are hand-formatted
-  and reviewed rather than auto-checked. `package-lock.json` is
-  auto-protected by Biome and never reformatted.
+  and reviewed rather than auto-checked. `bun.lock` is auto-protected by
+  Biome and never reformatted.
 - Markdown is linted via `remarkConfig` in `package.json`
   (`remark-preset-lint-recommended` + `remark-preset-lint-consistent`,
   `remark-frontmatter` for the YAML header blocks used throughout this

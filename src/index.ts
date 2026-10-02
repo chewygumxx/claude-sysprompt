@@ -35,7 +35,7 @@ export const options = {
     // otherwise add roughly 32k input tokens to every request.
     tools: [],
     // Skip ~/.claude and .claude/ settings: loading them runs this repo's
-    // SessionStart hook (a full npm install) and every enabled plugin on
+    // SessionStart hook (a full bun install) and every enabled plugin on
     // each start, which accounted for most of the startup delay.
     settingSources: [],
     persistSession: false,

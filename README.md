@@ -26,10 +26,10 @@ act less like software engineer and more like <https://claude.ai>.
 
 ## Prerequisites
 
-- Node.js >=22.12.0
+- Bun >=1.4
 - Either an Anthropic API key or a Claude Pro/Max subscription
 
-[mise](https://mise.jdx.dev) supplies a matching Node.js version from
+[mise](https://mise.jdx.dev) supplies a matching Bun version from
 `mise.toml`:
 
 ```sh
@@ -40,7 +40,7 @@ mise install
 ## Installation
 
 ```sh
-npm ci
+bun install
 ```
 
 ## Authentication
@@ -60,20 +60,20 @@ is nothing else to configure.
 Run directly from source, no build step required:
 
 ```sh
-npm run dev -- "What is your name?"
+bun run dev -- "What is your name?"
 ```
 
 Or build once and run the compiled output:
 
 ```sh
-npm run build
-npm start -- "What is your name?"
+bun run build
+bun start -- "What is your name?"
 ```
 
 Omit the trailing argument to fall back to a default greeting:
 
 ```sh
-npm run dev
+bun run dev
 ```
 
 Either command streams the reply to stdout as it is generated. The
