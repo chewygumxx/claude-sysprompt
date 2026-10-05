@@ -1,23 +1,22 @@
 ---
-__cgxx: |
-  # vim:set expandtab shiftwidth=2 filetype=markdown foldlevel=3:
-  # SPDX-License-Identifier: GPL-3.0-only
-
-  #
-  #
-  # ~chewygumxx/claude-sysprompt.git
-  # ::: :/.claude/CLAUDE.md
-  #
-  #
-
 ctime: 2026-09-28
+mtime: 2026-10-05
+spdx: GPL-3.0-only
 title: CLAUDE.md
 description: >-
-  Instruction file for the repository: 'chewygumxx/claude-sysprompt'
+  Claude Code's guide to this Agent SDK experiment: its architecture, commands,
+  commit rules, file headers, metadata and formatting.
 tags:
   - claude
   - llm
 ---
+
+<!--
+   -
+   - ~chewygumxx/claude-sysprompt.git
+   - ::: :/.claude/CLAUDE.md
+   -
+   -->
 
 # CLAUDE.md
 
@@ -188,3 +187,5 @@ to `main` are applied live by
 - `biome.json` also omits the file header convention: unlike
   `tsconfig.json`, Biome's own config parser does not treat `.json` as
   JSONC and errors on a leading comment block.
+
+<!-- vim:set expandtab shiftwidth=2 filetype=markdown foldlevel=3: -->
