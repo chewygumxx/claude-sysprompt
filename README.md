@@ -1,16 +1,7 @@
 ---
-__cgxx: |
-  # vim:set expandtab shiftwidth=2 filetype=markdown foldlevel=3:
-  # SPDX-License-Identifier: GPL-3.0-only
-
-  #
-  #
-  # ~chewygumxx/claude-sysprompt.git
-  # ::: :/README.md
-  #
-  #
-
 ctime: 2026-09-28
+mtime: 2026-10-05
+spdx: GPL-3.0-only
 title: claude-sysprompt
 description: >-
   Experimentation with configuring a custom system prompt via Claude Code Agent SDK.
@@ -18,6 +9,13 @@ tags:
   - claude
   - llm
 ---
+
+<!--
+   -
+   - ~chewygumxx/claude-sysprompt.git
+   - ::: :/README.md
+   -
+   -->
 
 # claude-sysprompt
 
@@ -80,3 +78,5 @@ Either command streams the reply to stdout as it is generated. The
 assistant answers in character as "Dorothy" per the custom system prompt in
 `src/index.ts`; see `.claude/CLAUDE.md` for the full command reference
 (tests, linting, formatting).
+
+<!-- vim:set expandtab shiftwidth=2 filetype=markdown foldlevel=3: -->
