@@ -14,7 +14,7 @@
         "bun": ">=1.4"
     },
     "dependencies": {
-        "@anthropic-ai/claude-agent-sdk": "^0.3.283",
+        "@anthropic-ai/claude-agent-sdk": "^0.3.296",
         "@dotenvx/dotenvx": "^2.32.4"
     },
     "devDependencies": {
