@@ -18,7 +18,7 @@
         "@dotenvx/dotenvx": "^2.32.4"
     },
     "devDependencies": {
-        "@biomejs/biome": "^2.5.14",
+        "@biomejs/biome": "^2.5.15",
         "@chewygumxx/commitlint-config": "^1.1.0",
         "@chewygumxx/cz-commitlint": "^1.0.2",
         "@chewygumxx/remark-preset": "^1.0.3",
